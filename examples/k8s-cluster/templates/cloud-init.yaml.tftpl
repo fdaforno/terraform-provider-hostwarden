@@ -1,0 +1,96 @@
+#cloud-config
+hostname: ${hostname}
+ssh_pwauth: true
+disable_root: false
+chpasswd:
+  list: |
+    root:${root_password}
+  expire: false
+
+write_files:
+  - path: /etc/modules-load.d/k8s.conf
+    permissions: '0644'
+    content: |
+      overlay
+      br_netfilter
+  - path: /etc/sysctl.d/k8s.conf
+    permissions: '0644'
+    content: |
+      net.bridge.bridge-nf-call-iptables  = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.ipv4.ip_forward                 = 1
+  - path: /etc/yum.repos.d/kubernetes.repo
+    permissions: '0644'
+    content: |
+      [kubernetes]
+      name=Kubernetes
+      baseurl=https://pkgs.k8s.io/core:/stable:/v${k8s_version}/rpm/
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://pkgs.k8s.io/core:/stable:/v${k8s_version}/rpm/repodata/repomd.xml.key
+      exclude=kubelet kubeadm kubectl
+  - path: /etc/yum.repos.d/docker-ce.repo
+    permissions: '0644'
+    content: |
+      [docker-ce-stable]
+      name=Docker CE Stable
+      baseurl=https://download.docker.com/linux/centos/9/x86_64/stable
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://download.docker.com/linux/centos/gpg
+
+runcmd:
+  # the Rocky 9 cloud image ships with PermitRootLogin prohibit-password
+  - "sed -i 's/^#\\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config"
+  - "sed -i 's/^#\\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config"
+  - systemctl restart sshd
+  # static networking (Rocky GenericCloud connection name is "System eth0")
+  - nmcli connection modify "System eth0" ipv4.method manual ipv4.addresses ${ip}/${prefix} ipv4.gateway ${gateway} ipv4.dns "${dns_servers[0]} ${dns_servers[1]}"
+  - nmcli connection up "System eth0"
+  # kubeadm prerequisites
+  - swapoff -a
+  - sed -i '/ swap / s/^/#/' /etc/fstab
+  - setenforce 0 || true
+  - sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
+  # lab setup: firewalld would otherwise block the kubelet, API server and Flannel ports
+  - systemctl disable --now firewalld 2>/dev/null || true
+  - modprobe overlay
+  - modprobe br_netfilter
+  - sysctl --system
+  # containerd with the systemd cgroup driver
+  - dnf install -y containerd.io
+  - containerd config default | sed 's/SystemdCgroup = false/SystemdCgroup = true/' > /etc/containerd/config.toml
+  - systemctl restart containerd
+  # kubelet, kubeadm and kubectl, pinned to ${k8s_version}
+  - dnf install -y 'kubelet-${k8s_version}*' 'kubeadm-${k8s_version}*' 'kubectl-${k8s_version}*' --disableexcludes=kubernetes
+  - systemctl enable --now kubelet
+%{ if role == "control-plane" }
+  # bootstrap the cluster with the pre-shared token (no expiry) the workers join with
+  - |
+    kubeadm init \
+      --apiserver-advertise-address ${api_ip} \
+      --pod-network-cidr ${pod_cidr} \
+      --token ${join_token} \
+      --token-ttl 0 \
+      --node-name ${hostname}
+  - mkdir -p /root/.kube
+  - cp /etc/kubernetes/admin.conf /root/.kube/config
+  - chmod 600 /root/.kube/config
+  # Flannel CNI (retried until the API server is ready)
+  - |
+    for i in $(seq 1 30); do
+      kubectl apply --validate=false -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml && exit 0
+      sleep 10
+    done
+    exit 1
+%{ else }
+  # join, retried until kubeadm init has brought up the API server on the control-plane
+  - |
+    for i in $(seq 1 60); do
+      kubeadm join ${api_ip}:6443 --token ${join_token} \
+        --discovery-token-unsafe-skip-ca-verification \
+        --node-name ${hostname} && exit 0
+      sleep 15
+    done
+    exit 1
+%{ endif }

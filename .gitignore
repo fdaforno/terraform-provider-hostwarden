@@ -1,0 +1,18 @@
+# built provider
+/terraform-provider-freecenter
+dist/
+
+# Terraform working files: a state file holds secrets in plain text
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+*.tfvars
+!*.tfvars.example
+
+# local development setup
+/dev.tfrc
+/tf-mirror/
+
+.DS_Store

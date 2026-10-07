@@ -1,0 +1,20 @@
+# Copy to terraform.tfvars (ignored by git) and adapt.
+freecenter_address = "http://freecenter.example.lan:8080"
+host_name          = "esxi-01"
+datastore          = "datastore1"
+
+# Generate your own: openssl rand -base64 18
+root_password = "change-me"
+# Generate your own: kubeadm token generate
+# (or: echo "$(openssl rand -hex 3).$(openssl rand -hex 8)")
+join_token = "abcdef.0123456789abcdef"
+
+prefix      = 24
+gateway     = "192.168.1.1"
+dns_servers = ["192.168.1.1", "9.9.9.9"]
+
+nodes = {
+  k8s-cp-1 = { ip = "192.168.1.71", role = "control-plane" }
+  k8s-w-1  = { ip = "192.168.1.72", role = "worker" }
+  k8s-w-2  = { ip = "192.168.1.73", role = "worker" }
+}
