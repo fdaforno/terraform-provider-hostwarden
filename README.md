@@ -4,6 +4,8 @@ Manage **standalone VMware ESXi** hosts with Terraform, through FreeCenter.
 
 This provider talks to [FreeCenter](https://github.com/fdaforno/freecenter), an independent management server that puts a REST API in front of your standalone ESXi hosts. With it you can describe virtual machines, templates, networks, snapshots, backups and schedules as code, and even migrate a virtual machine to another host by changing one attribute.
 
+FreeCenter is a simple interface over the standard administration commands already present on an ESXi host. Its purpose is not to work around the licensing of vCenter Server or of any other product: the one practical advantage is infrastructure as code in a home lab, to build throwaway test systems quickly. It is meant for home labs and test environments, not for production.
+
 You need a running FreeCenter with at least one registered host: see the [FreeCenter README](https://github.com/fdaforno/freecenter#getting-started).
 
 ## Example
@@ -151,4 +153,4 @@ The provider follows the REST API of FreeCenter. Use a provider release with a F
 
 ## Disclaimer
 
-An independent project: not affiliated with, endorsed, sponsored or supported by Broadcom, VMware or HashiCorp. VMware, ESXi and vSphere are registered trademarks or trademarks of Broadcom Inc. and/or its subsidiaries; Terraform is a trademark of HashiCorp, an IBM company. They are used only to identify the software this provider works with. You are responsible for using your hosts in compliance with the license agreement under which you obtained the hypervisor: see [Licensing and compliance](https://github.com/fdaforno/freecenter#licensing-and-compliance).
+An independent project: not affiliated with, endorsed, sponsored or supported by Broadcom, VMware or HashiCorp. VMware, ESXi, vSphere and vCenter are registered trademarks or trademarks of Broadcom Inc. and/or its subsidiaries; Terraform is a trademark of HashiCorp, an IBM company. They are used only to identify the software this provider works with. You are responsible for using your hosts in compliance with the license agreement under which you obtained the hypervisor: see [Licensing and compliance](https://github.com/fdaforno/freecenter#licensing-and-compliance).
