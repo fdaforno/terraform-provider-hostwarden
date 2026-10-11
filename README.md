@@ -1,8 +1,8 @@
 # Terraform Provider for FreeCenter
 
-Manage **free VMware ESXi** hosts with Terraform.
+Manage **standalone VMware ESXi** hosts with Terraform, through FreeCenter.
 
-The free ESXi license makes the vSphere API read-only, so the official vSphere provider cannot create or change anything on it. This provider talks to [FreeCenter](https://github.com/fdaforno/freecenter) instead, a small management server that gives standalone ESXi hosts a full REST API. With it you can describe virtual machines, templates, networks, snapshots, backups and schedules as code, and even migrate a virtual machine to another host by changing one attribute.
+This provider talks to [FreeCenter](https://github.com/fdaforno/freecenter), an independent management server that puts a REST API in front of your standalone ESXi hosts. With it you can describe virtual machines, templates, networks, snapshots, backups and schedules as code, and even migrate a virtual machine to another host by changing one attribute.
 
 You need a running FreeCenter with at least one registered host: see the [FreeCenter README](https://github.com/fdaforno/freecenter#getting-started).
 
@@ -105,7 +105,7 @@ Every argument is documented in [`docs/`](docs/index.md), the pages shown on the
 
 ## How `freecenter_vm` behaves
 
-- **Changes in place.** ESXi free only accepts configuration changes on a powered-off machine. The provider powers it off, applies all changes at once and restores the desired `power` state. Name, guest OS, CPU, memory, networks, firmware and options change in place. Disks can grow and be appended, never shrunk or removed.
+- **Changes in place.** FreeCenter applies configuration changes to a powered-off machine. The provider powers it off, applies all changes at once and restores the desired `power` state. Name, guest OS, CPU, memory, networks, firmware and options change in place. Disks can grow and be appended, never shrunk or removed.
 - **Migration.** Changing `host_id` (with `datastore` naming the datastore on the target host) migrates the machine: its files are copied directly between the two hosts and removed from the source, and the resource `id` changes. `migrate_mode` chooses `stop_start` or `suspend` (same CPU on both hosts only); when omitted FreeCenter decides from the power state and the CPUs. `migrate_precopy = true` copies the disks while the machine runs, to shorten the stop. Changing `datastore` alone replaces the machine.
 - **Clone and restore.** `clone_from` (the id of a powered-off machine or template on the same host) and `restore_from` (the id of a `freecenter_backup`) create the machine from a copy; the other arguments are then applied to it.
 - **Templates.** `template = true` marks the machine as a template, which stays powered off.
@@ -151,4 +151,4 @@ The provider follows the REST API of FreeCenter. Use a provider release with a F
 
 ## Disclaimer
 
-An independent project, not affiliated with VMware, Broadcom or HashiCorp. VMware, ESXi and vSphere are trademarks of their respective owners.
+An independent project: not affiliated with, endorsed, sponsored or supported by Broadcom, VMware or HashiCorp. VMware, ESXi and vSphere are registered trademarks or trademarks of Broadcom Inc. and/or its subsidiaries; Terraform is a trademark of HashiCorp, an IBM company. They are used only to identify the software this provider works with. You are responsible for using your hosts in compliance with the license agreement under which you obtained the hypervisor: see [Licensing and compliance](https://github.com/fdaforno/freecenter#licensing-and-compliance).

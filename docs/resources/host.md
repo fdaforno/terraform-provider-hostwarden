@@ -26,7 +26,7 @@ Register an ESXi host in FreeCenter.
 
 - `insecure` (Boolean) Skip TLS verification of the ESXi API, for self-signed certificates (default true).
 - `maintenance_mode` (Boolean) Put the host in maintenance mode. Entering it fails while virtual machines are running: power them off or migrate them first. When omitted the mode is left as it is.
-- `ssh_enabled` (Boolean) Enable the SSH transport, required for every change on ESXi free (default true).
+- `ssh_enabled` (Boolean) Enable the SSH transport, required for every change to the host (default true).
 - `ssh_port` (Number) SSH port (default 22).
 
 ### Read-Only

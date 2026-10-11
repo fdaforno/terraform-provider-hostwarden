@@ -62,7 +62,7 @@ func (r *hostResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Sensitive:   true,
 			},
 			"ssh_enabled": schema.BoolAttribute{
-				Description: "Enable the SSH transport, required for every change on ESXi free (default true).",
+				Description: "Enable the SSH transport, required for every change to the host (default true).",
 				Optional:    true,
 				Computed:    true,
 				Default:     booldefault.StaticBool(true),

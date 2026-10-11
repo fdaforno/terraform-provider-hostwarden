@@ -655,8 +655,8 @@ func firmwareOf(vm *apiVM) string {
 }
 
 // reconcile brings the VM to the planned configuration and power state. The
-// VM is powered off first when something has to change, as ESXi free only
-// accepts configuration changes on a powered-off VM. It returns the VM as it
+// VM is powered off first when something has to change, as FreeCenter only
+// applies configuration changes to a powered-off VM. It returns the VM as it
 // is afterwards.
 func (r *vmResource) reconcile(ctx context.Context, hostID, vmID string, plan *vmResourceModel, diags *diag.Diagnostics) (*apiVM, error) {
 	vm, err := r.client.GetVM(ctx, hostID, vmID)

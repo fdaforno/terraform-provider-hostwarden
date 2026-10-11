@@ -3,12 +3,12 @@
 page_title: "freecenter Provider"
 subcategory: ""
 description: |-
-  Manage ESXi free hosts and their virtual machines through a FreeCenter server. Authenticate with a token, or with a user name and password. Changes require an administrator.
+  Manage standalone ESXi hosts and their virtual machines through a FreeCenter server. Authenticate with a token, or with a user name and password. Changes require an administrator.
 ---
 
 # freecenter Provider
 
-Manage ESXi free hosts and their virtual machines through a FreeCenter server. Authenticate with a token, or with a user name and password. Changes require an administrator.
+Manage standalone ESXi hosts and their virtual machines through a FreeCenter server. Authenticate with a token, or with a user name and password. Changes require an administrator.
 
 ## Example Usage
 

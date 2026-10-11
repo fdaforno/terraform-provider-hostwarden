@@ -1,4 +1,4 @@
-# Migrating a virtual machine between ESXi hosts, without vCenter.
+# Migrating a virtual machine between ESXi hosts.
 #
 # Changing host_id migrates the VM: its files are copied directly between the
 # two hosts and removed from the source. datastore names the datastore on the

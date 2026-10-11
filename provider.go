@@ -37,7 +37,7 @@ func (p *freecenterProvider) Metadata(_ context.Context, _ provider.MetadataRequ
 
 func (p *freecenterProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manage ESXi free hosts and their virtual machines through a FreeCenter server. " +
+		Description: "Manage standalone ESXi hosts and their virtual machines through a FreeCenter server. " +
 			"Authenticate with a token, or with a user name and password. Changes require an administrator.",
 		Attributes: map[string]schema.Attribute{
 			"address": schema.StringAttribute{
