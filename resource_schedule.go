@@ -36,19 +36,19 @@ type scheduleModel struct {
 }
 
 func (r *scheduleResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_schedule"
+	resp.TypeName = "hostwarden_schedule"
 }
 
 func (r *scheduleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Scheduled snapshots or backups of a virtual machine, run by the FreeCenter server.",
+		Description: "Scheduled snapshots or backups of a virtual machine, run by the Hostwarden server.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"vm_id": schema.StringAttribute{
-				Description: "The virtual machine (freecenter_vm id).",
+				Description: "The virtual machine (hostwarden_vm id).",
 				Required:    true,
 			},
 			"kind": schema.StringAttribute{

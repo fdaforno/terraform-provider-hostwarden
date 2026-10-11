@@ -1,5 +1,5 @@
 # Copy to terraform.tfvars (ignored by git) and adapt.
-freecenter_address = "http://freecenter.example.lan:8080"
+hostwarden_address = "http://hostwarden.example.lan:8080"
 host_name          = "esxi-01"
 datastore          = "datastore1"
 

@@ -2,16 +2,16 @@
 #
 # Requirements:
 #   1. The Rocky 9 cloud image on the datastore, as cloud-images/rocky-9.vmdk:
-#      download it from the New Virtual Machine wizard of FreeCenter
+#      download it from the New Virtual Machine wizard of Hostwarden
 #      ("Deploy from a cloud image").
 #   2. A DHCP server on the "VM Network" port group.
 #
 # On first boot cloud-init sets the host name and the root password,
 # authorizes the SSH key, installs the packages and runs the commands.
 
-resource "freecenter_vm" "rocky" {
+resource "hostwarden_vm" "rocky" {
   count   = 3
-  host_id = data.freecenter_host.main.id
+  host_id = data.hostwarden_host.main.id
 
   name      = "rocky-${count.index + 1}"
   guest_id  = "rockylinux_64Guest"
@@ -43,10 +43,10 @@ resource "freecenter_vm" "rocky" {
 }
 
 output "vm_ids" {
-  value       = freecenter_vm.rocky[*].id
-  description = "FreeCenter id (<host_id>/<vm_id>) of each VM."
+  value       = hostwarden_vm.rocky[*].id
+  description = "Hostwarden id (<host_id>/<vm_id>) of each VM."
 }
 
 output "vm_names" {
-  value = freecenter_vm.rocky[*].name
+  value = hostwarden_vm.rocky[*].name
 }

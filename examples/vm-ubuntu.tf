@@ -2,10 +2,10 @@
 #
 # Requires the Ubuntu 24.04 cloud image on the datastore, as
 # cloud-images/ubuntu-24.04.vmdk (download it from the New Virtual Machine
-# wizard of FreeCenter).
+# wizard of Hostwarden).
 
-resource "freecenter_vm" "ubuntu" {
-  host_id  = data.freecenter_host.main.id
+resource "hostwarden_vm" "ubuntu" {
+  host_id  = data.hostwarden_host.main.id
   name     = "ubuntu-web"
   guest_id = "ubuntu64Guest"
 
@@ -28,7 +28,7 @@ resource "freecenter_vm" "ubuntu" {
 
     runcmd = [
       "systemctl enable --now nginx",
-      "echo '<h1>Hello from FreeCenter!</h1>' > /var/www/html/index.html",
+      "echo '<h1>Hello from Hostwarden!</h1>' > /var/www/html/index.html",
     ]
   }
 

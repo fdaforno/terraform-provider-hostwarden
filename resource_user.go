@@ -23,12 +23,12 @@ type userModel struct {
 }
 
 func (r *userResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_user"
+	resp.TypeName = "hostwarden_user"
 }
 
 func (r *userResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "A FreeCenter user. Managing users requires the provider to authenticate as an administrator.",
+		Description: "A Hostwarden user. Managing users requires the provider to authenticate as an administrator.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,

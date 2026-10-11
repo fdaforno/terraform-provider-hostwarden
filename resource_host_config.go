@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
-// ---- freecenter_host_service ----
+// ---- hostwarden_host_service ----
 
 type hostServiceResource struct{ client *Client }
 
@@ -30,7 +30,7 @@ type hostServiceModel struct {
 }
 
 func (r *hostServiceResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_host_service"
+	resp.TypeName = "hostwarden_host_service"
 }
 
 func (r *hostServiceResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -38,7 +38,7 @@ func (r *hostServiceResource) Schema(_ context.Context, _ resource.SchemaRequest
 	resp.Schema = schema.Schema{
 		Description: "State and startup policy of a service of an ESXi host (e.g. ntpd, TSM for the ESXi Shell). " +
 			"The service exists on the host regardless: destroying the resource leaves it as it is. " +
-			"The SSH service cannot be stopped or disabled, as FreeCenter manages the host through it.",
+			"The SSH service cannot be stopped or disabled, as Hostwarden manages the host through it.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Description:   "<host_id>/<key>.",
@@ -176,7 +176,7 @@ func (r *hostServiceResource) Update(ctx context.Context, req resource.UpdateReq
 func (r *hostServiceResource) Delete(context.Context, resource.DeleteRequest, *resource.DeleteResponse) {
 }
 
-// ---- freecenter_host_ntp ----
+// ---- hostwarden_host_ntp ----
 
 type hostNTPResource struct{ client *Client }
 
@@ -190,7 +190,7 @@ type hostNTPModel struct {
 }
 
 func (r *hostNTPResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_host_ntp"
+	resp.TypeName = "hostwarden_host_ntp"
 }
 
 func (r *hostNTPResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

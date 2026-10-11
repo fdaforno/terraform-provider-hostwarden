@@ -1,6 +1,6 @@
 # A three-node Kubernetes cluster with kubeadm
 
-One control-plane and two workers on an ESXi host managed by FreeCenter. The nodes are deployed from the Rocky Linux 9 cloud image with static addresses and provisioned entirely by cloud-init:
+One control-plane and two workers on an ESXi host managed by Hostwarden. The nodes are deployed from the Rocky Linux 9 cloud image with static addresses and provisioned entirely by cloud-init:
 
 - containerd with the systemd cgroup driver;
 - kubelet, kubeadm and kubectl of `var.k8s_version`;
@@ -11,7 +11,7 @@ One control-plane and two workers on an ESXi host managed by FreeCenter. The nod
 
 ## Requirements
 
-- A host registered in FreeCenter, with the Rocky 9 cloud image on its datastore as `cloud-images/rocky-9.vmdk` (download it from the New Virtual Machine wizard of FreeCenter).
+- A host registered in Hostwarden, with the Rocky 9 cloud image on its datastore as `cloud-images/rocky-9.vmdk` (download it from the New Virtual Machine wizard of Hostwarden).
 - Three free addresses on the network of the nodes.
 - The provider: see the [provider README](../../README.md#building-and-using-a-local-build) for using a local build.
 
@@ -20,7 +20,7 @@ One control-plane and two workers on an ESXi host managed by FreeCenter. The nod
 ```bash
 cd examples/k8s-cluster
 cp terraform.tfvars.example terraform.tfvars    # then edit: addresses, password, token
-export FREECENTER_USERNAME=admin FREECENTER_PASSWORD=...   # or FREECENTER_TOKEN
+export HOSTWARDEN_USERNAME=admin HOSTWARDEN_PASSWORD=...   # or HOSTWARDEN_TOKEN
 terraform init
 terraform apply
 ```

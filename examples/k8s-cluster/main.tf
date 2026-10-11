@@ -1,5 +1,5 @@
 # A three-node Kubernetes cluster (one control-plane, two workers) on an ESXi
-# host managed by FreeCenter.
+# host managed by Hostwarden.
 #
 # The nodes are deployed from the Rocky Linux 9 cloud image with static
 # addresses and provisioned by cloud-init: containerd, kubelet / kubeadm /
@@ -12,18 +12,18 @@ terraform {
   required_version = ">= 1.5"
 
   required_providers {
-    freecenter = {
-      source = "registry.terraform.io/fdaforno/freecenter"
+    hostwarden = {
+      source = "registry.terraform.io/fdaforno/hostwarden"
     }
   }
 }
 
-provider "freecenter" {
-  address = var.freecenter_address
-  # Credentials from the environment: FREECENTER_TOKEN, or FREECENTER_USERNAME and FREECENTER_PASSWORD.
+provider "hostwarden" {
+  address = var.hostwarden_address
+  # Credentials from the environment: HOSTWARDEN_TOKEN, or HOSTWARDEN_USERNAME and HOSTWARDEN_PASSWORD.
 }
 
-data "freecenter_host" "main" {
+data "hostwarden_host" "main" {
   name = var.host_name
 }
 
@@ -32,10 +32,10 @@ locals {
   api_ip = one([for n in var.nodes : n.ip if n.role == "control-plane"])
 }
 
-resource "freecenter_vm" "node" {
+resource "hostwarden_vm" "node" {
   for_each = local.nodes
 
-  host_id  = data.freecenter_host.main.id
+  host_id  = data.hostwarden_host.main.id
   name     = each.key
   guest_id = "rockylinux_64Guest"
 

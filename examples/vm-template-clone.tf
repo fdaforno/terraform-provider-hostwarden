@@ -5,8 +5,8 @@
 # of its source; the other arguments (CPU, memory, networks, firmware...) are
 # applied to the clone before its first boot.
 
-resource "freecenter_vm" "golden" {
-  host_id  = data.freecenter_host.main.id
+resource "hostwarden_vm" "golden" {
+  host_id  = data.hostwarden_host.main.id
   name     = "golden-linux"
   guest_id = "otherLinux64Guest"
 
@@ -19,19 +19,19 @@ resource "freecenter_vm" "golden" {
   template = true # power becomes "off" by itself
 }
 
-resource "freecenter_vm" "worker" {
+resource "hostwarden_vm" "worker" {
   count = 2
 
-  host_id    = data.freecenter_host.main.id
+  host_id    = data.hostwarden_host.main.id
   name       = "worker-${count.index + 1}"
   datastore  = var.datastore
-  clone_from = freecenter_vm.golden.id
+  clone_from = hostwarden_vm.golden.id
 
   num_cpus  = 2
   memory_mb = 4096
 
   network             = "VM Network"
-  additional_networks = [freecenter_port_group.lab.name] # a second network adapter
+  additional_networks = [hostwarden_port_group.lab.name] # a second network adapter
   adapter_type        = "vmxnet3"
 
   nested_hv      = true # nested virtualization
@@ -43,9 +43,9 @@ resource "freecenter_vm" "worker" {
 
 # An existing template (made in the web console) is found by name:
 #
-# data "freecenter_vm" "tpl" {
-#   host_id = data.freecenter_host.main.id
+# data "hostwarden_vm" "tpl" {
+#   host_id = data.hostwarden_host.main.id
 #   name    = "rocky9-template"
 # }
 #
-# ... clone_from = data.freecenter_vm.tpl.id
+# ... clone_from = data.hostwarden_vm.tpl.id

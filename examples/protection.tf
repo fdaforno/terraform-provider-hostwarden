@@ -1,21 +1,21 @@
 # Snapshots, backups, schedules and users.
 
 # A snapshot (destroying the resource deletes it)
-resource "freecenter_vm_snapshot" "before_upgrade" {
-  vm_id       = freecenter_vm.app.id
+resource "hostwarden_vm_snapshot" "before_upgrade" {
+  vm_id       = hostwarden_vm.app.id
   name        = "before-upgrade"
   description = "Before the upgrade"
   memory      = false
 }
 
 # A one-off backup: a consolidated copy of disks and configuration in the
-# freecenter-backups folder of the datastore. Works on a running VM too.
-resource "freecenter_backup" "golden" {
-  vm_id     = freecenter_vm.golden.id
+# hostwarden-backups folder of the datastore. Works on a running VM too.
+resource "hostwarden_backup" "golden" {
+  vm_id     = hostwarden_vm.golden.id
   datastore = var.datastore
 
   # To move the backup to another host:
-  # target_host_id   = data.freecenter_host.second.id
+  # target_host_id   = data.hostwarden_host.second.id
   # target_datastore = "datastore1"
 
   # Changing a value here takes a new backup
@@ -23,17 +23,17 @@ resource "freecenter_backup" "golden" {
 }
 
 # Restoring a backup as a new VM (on the host that holds it)
-resource "freecenter_vm" "golden_restored" {
-  host_id      = freecenter_backup.golden.host_id
+resource "hostwarden_vm" "golden_restored" {
+  host_id      = hostwarden_backup.golden.host_id
   name         = "golden-restored"
   datastore    = var.datastore
-  restore_from = freecenter_backup.golden.id
+  restore_from = hostwarden_backup.golden.id
   power        = "off"
 }
 
 # A snapshot every night, keeping the last 7
-resource "freecenter_schedule" "app_nightly_snapshot" {
-  vm_id     = freecenter_vm.app.id
+resource "hostwarden_schedule" "app_nightly_snapshot" {
+  vm_id     = hostwarden_vm.app.id
   kind      = "snapshot"
   frequency = "daily"
   hour      = 2
@@ -43,8 +43,8 @@ resource "freecenter_schedule" "app_nightly_snapshot" {
 }
 
 # A weekly backup (Sunday at 03:00) moved to the other host
-resource "freecenter_schedule" "app_weekly_backup" {
-  vm_id     = freecenter_vm.app.id
+resource "hostwarden_schedule" "app_weekly_backup" {
+  vm_id     = hostwarden_vm.app.id
   kind      = "backup"
   frequency = "weekly"
   weekday   = 0
@@ -53,7 +53,7 @@ resource "freecenter_schedule" "app_weekly_backup" {
   keep      = 4
 
   backup_datastore        = var.datastore
-  backup_target_host_id   = data.freecenter_host.second.id
+  backup_target_host_id   = data.hostwarden_host.second.id
   backup_target_datastore = "datastore1"
 }
 
@@ -63,7 +63,7 @@ variable "auditor_password" {
   sensitive = true
 }
 
-resource "freecenter_user" "auditor" {
+resource "hostwarden_user" "auditor" {
   username = "auditor"
   password = var.auditor_password
   role     = "readonly"

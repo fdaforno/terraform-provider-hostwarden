@@ -1,10 +1,10 @@
 output "vm_ids" {
-  value       = { for k, v in freecenter_vm.node : k => v.id }
-  description = "FreeCenter id (<host_id>/<vm_id>) of each node."
+  value       = { for k, v in hostwarden_vm.node : k => v.id }
+  description = "Hostwarden id (<host_id>/<vm_id>) of each node."
 }
 
 output "ip_addresses" {
-  value       = { for k, v in freecenter_vm.node : k => v.ip_address }
+  value       = { for k, v in hostwarden_vm.node : k => v.ip_address }
   description = "Address of each node, as reported by its guest tools."
 }
 

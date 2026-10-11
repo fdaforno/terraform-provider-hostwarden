@@ -1,8 +1,8 @@
 # An empty virtual machine: no cloud image, no ISO.
 # Two thin disks of 20 and 50 GB; left powered off.
 
-resource "freecenter_vm" "empty" {
-  host_id  = data.freecenter_host.main.id
+resource "hostwarden_vm" "empty" {
+  host_id  = data.hostwarden_host.main.id
   name     = "test-empty"
   guest_id = "rockylinux_64Guest"
 

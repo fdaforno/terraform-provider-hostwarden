@@ -1,4 +1,4 @@
-module github.com/fdaforno/terraform-provider-freecenter
+module github.com/fdaforno/terraform-provider-hostwarden
 
 go 1.26.5
 

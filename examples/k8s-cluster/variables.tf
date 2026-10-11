@@ -1,11 +1,11 @@
-variable "freecenter_address" {
-  description = "URL of the FreeCenter server."
+variable "hostwarden_address" {
+  description = "URL of the Hostwarden server."
   type        = string
   default     = "http://localhost:8080"
 }
 
 variable "host_name" {
-  description = "Name of the ESXi host (as registered in FreeCenter) the nodes run on."
+  description = "Name of the ESXi host (as registered in Hostwarden) the nodes run on."
   type        = string
   default     = "esxi-01"
 }

@@ -1,11 +1,11 @@
 # Terraform examples
 
-Examples for the [FreeCenter Terraform provider](../README.md). The files in this folder form one configuration; [`k8s-cluster`](k8s-cluster/) is a separate, self-contained one.
+Examples for the [Hostwarden Terraform provider](../README.md). The files in this folder form one configuration; [`k8s-cluster`](k8s-cluster/) is a separate, self-contained one.
 
 ## Requirements
 
-1. A running FreeCenter with your ESXi hosts registered. The examples look them up as `esxi-01` and `esxi-02`: change the names in `provider.tf`.
-2. For the examples that deploy from a cloud image, the image on the datastore: download it from the New Virtual Machine wizard of FreeCenter ("Deploy from a cloud image"). It is saved as `cloud-images/<name>.vmdk`.
+1. A running Hostwarden with your ESXi hosts registered. The examples look them up as `esxi-01` and `esxi-02`: change the names in `provider.tf`.
+2. For the examples that deploy from a cloud image, the image on the datastore: download it from the New Virtual Machine wizard of Hostwarden ("Deploy from a cloud image"). It is saved as `cloud-images/<name>.vmdk`.
 3. The provider. Until it is published on the Terraform Registry, build it and use a development override: see the [provider README](../README.md#building-and-using-a-local-build).
 
 ## Running
@@ -13,8 +13,8 @@ Examples for the [FreeCenter Terraform provider](../README.md). The files in thi
 ```bash
 cd examples
 cat > terraform.tfvars <<'VARS'
-freecenter_address  = "http://freecenter.example.lan:8080"
-freecenter_password = "..."
+hostwarden_address  = "http://hostwarden.example.lan:8080"
+hostwarden_password = "..."
 datastore           = "datastore1"
 guest_password      = "..."
 ssh_public_key      = "ssh-ed25519 AAAA... you@example"
@@ -28,7 +28,7 @@ terraform apply
 `terraform.tfvars` is ignored by git: keep your addresses and passwords there. To try a single example, use `-target`:
 
 ```bash
-terraform apply -target=freecenter_vm.rocky
+terraform apply -target=hostwarden_vm.rocky
 ```
 
 ## What is here

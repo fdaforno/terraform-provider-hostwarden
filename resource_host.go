@@ -33,12 +33,12 @@ type hostResourceModel struct {
 }
 
 func (r *hostResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_host"
+	resp.TypeName = "hostwarden_host"
 }
 
 func (r *hostResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Register an ESXi host in FreeCenter.",
+		Description: "Register an ESXi host in Hostwarden.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				Computed:      true,
@@ -57,7 +57,7 @@ func (r *hostResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Required:    true,
 			},
 			"password": schema.StringAttribute{
-				Description: "ESXi password. FreeCenter stores it encrypted and never returns it.",
+				Description: "ESXi password. Hostwarden stores it encrypted and never returns it.",
 				Required:    true,
 				Sensitive:   true,
 			},
@@ -106,7 +106,7 @@ func hostRequest(m *hostResourceModel) createHostRequest {
 	}
 }
 
-// setHostState fills m with the host as FreeCenter reports it. The password
+// setHostState fills m with the host as Hostwarden reports it. The password
 // is never returned by the API and keeps its value.
 func setHostState(m *hostResourceModel, h *apiHost) {
 	m.ID = types.StringValue(h.ID)

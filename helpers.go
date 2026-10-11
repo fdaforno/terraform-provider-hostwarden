@@ -27,7 +27,7 @@ func clientFrom(providerData any, diags *diag.Diagnostics) *Client {
 
 // ---- composite ids ----
 
-// parseVMID splits the id of a freecenter_vm: <host_id>/<vm_id>.
+// parseVMID splits the id of a hostwarden_vm: <host_id>/<vm_id>.
 func parseVMID(id string) (hostID, vmID string, err error) {
 	hostID, vmID, ok := strings.Cut(id, "/")
 	if !ok || hostID == "" || vmID == "" || strings.Contains(vmID, "/") {

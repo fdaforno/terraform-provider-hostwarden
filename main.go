@@ -16,7 +16,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/fdaforno/freecenter",
+		Address: "registry.terraform.io/fdaforno/hostwarden",
 		Debug:   debug,
 	}
 

@@ -98,7 +98,7 @@ type vmResourceModel struct {
 }
 
 func (r *vmResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_vm"
+	resp.TypeName = "hostwarden_vm"
 }
 
 func (r *vmResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -112,17 +112,17 @@ func (r *vmResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *r
 	}
 
 	resp.Schema = schema.Schema{
-		Description: "A virtual machine managed by FreeCenter on an ESXi host. Hardware and option changes are applied " +
+		Description: "A virtual machine managed by Hostwarden on an ESXi host. Hardware and option changes are applied " +
 			"with the VM powered off: the provider powers it off, applies them and restores the desired power state. " +
 			"Changing host_id migrates the VM to the other host.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				Description:   "FreeCenter VM id (<host_id>/<vm_id>). It changes when the VM is migrated.",
+				Description:   "Hostwarden VM id (<host_id>/<vm_id>). It changes when the VM is migrated.",
 				Computed:      true,
 				PlanModifiers: keepString,
 			},
 			"host_id": schema.StringAttribute{
-				Description: "FreeCenter host id (freecenter_host.id or data.freecenter_host.id). Changing it migrates the VM " +
+				Description: "Hostwarden host id (hostwarden_host.id or data.hostwarden_host.id). Changing it migrates the VM " +
 					"to that host, on the datastore named by datastore: the files are copied directly between the two hosts.",
 				Required: true,
 			},
@@ -241,13 +241,13 @@ func (r *vmResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *r
 				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 			"clone_from": schema.StringAttribute{
-				Description: "Create the VM as a clone of this VM or template (its freecenter_vm id). The source must be on " +
+				Description: "Create the VM as a clone of this VM or template (its hostwarden_vm id). The source must be on " +
 					"host_id and powered off. The other attributes are then applied to the clone.",
 				Optional:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
 			},
 			"restore_from": schema.StringAttribute{
-				Description: "Create the VM from this backup (a freecenter_backup id). The backup must be on host_id. " +
+				Description: "Create the VM from this backup (a hostwarden_backup id). The backup must be on host_id. " +
 					"The other attributes are then applied to the restored VM.",
 				Optional:      true,
 				PlanModifiers: []planmodifier.String{stringplanmodifier.RequiresReplace()},
@@ -300,7 +300,7 @@ func (r *vmResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *r
 			"migrate_mode": schema.StringAttribute{
 				Description: "How a running VM is migrated when host_id changes: stop_start (shut down, copy, power on) or " +
 					"suspend (suspend, copy, resume: hosts with the same CPU only); cold for a powered-off VM. " +
-					"By default FreeCenter picks the mode from the power state and the CPUs of the two hosts.",
+					"By default Hostwarden picks the mode from the power state and the CPUs of the two hosts.",
 				Optional:   true,
 				Validators: []validator.String{oneOf("cold", "stop_start", "suspend")},
 			},
@@ -521,7 +521,7 @@ func (r *vmResource) Create(ctx context.Context, req resource.CreateRequest, res
 		vmID = vm.ID
 	}
 	if vmID == "" {
-		resp.Diagnostics.AddError("creating VM failed", "FreeCenter did not return the id of the new VM.")
+		resp.Diagnostics.AddError("creating VM failed", "Hostwarden did not return the id of the new VM.")
 		return
 	}
 
@@ -655,7 +655,7 @@ func firmwareOf(vm *apiVM) string {
 }
 
 // reconcile brings the VM to the planned configuration and power state. The
-// VM is powered off first when something has to change, as FreeCenter only
+// VM is powered off first when something has to change, as Hostwarden only
 // applies configuration changes to a powered-off VM. It returns the VM as it
 // is afterwards.
 func (r *vmResource) reconcile(ctx context.Context, hostID, vmID string, plan *vmResourceModel, diags *diag.Diagnostics) (*apiVM, error) {
@@ -708,7 +708,7 @@ func (r *vmResource) setPower(ctx context.Context, hostID, vmID, action string) 
 	return r.client.WaitForPower(ctx, hostID, vmID, want, powerWait)
 }
 
-// setVMState fills m with the VM as FreeCenter reports it. Attributes the API
+// setVMState fills m with the VM as Hostwarden reports it. Attributes the API
 // does not return (creation options, migration settings) keep their value.
 func setVMState(ctx context.Context, m *vmResourceModel, hostID string, vm *apiVM, diags *diag.Diagnostics) {
 	m.ID = types.StringValue(hostID + "/" + vm.ID)
@@ -874,7 +874,7 @@ func (r *vmResource) migrate(ctx context.Context, hostID, vmID string, plan *vmR
 	}
 	jobWarnings(job, diags)
 	if job.NewVMID == "" {
-		diags.AddError("migrating VM failed", "FreeCenter did not return the id of the VM on the target host.")
+		diags.AddError("migrating VM failed", "Hostwarden did not return the id of the VM on the target host.")
 		return "", false
 	}
 	return job.NewVMID, true

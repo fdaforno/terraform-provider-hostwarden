@@ -29,7 +29,7 @@ func resolveHost(ctx context.Context, c *Client, hostID, hostName types.String, 
 	return host.ID, true
 }
 
-// ---- data source: freecenter_host (by name) ----
+// ---- data source: hostwarden_host (by name) ----
 
 type hostDataSource struct{ client *Client }
 
@@ -51,18 +51,18 @@ type hostDataSourceModel struct {
 }
 
 func (d *hostDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = "freecenter_host"
+	resp.TypeName = "hostwarden_host"
 }
 
 func (d *hostDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Look up a registered FreeCenter host by name, with its live status.",
+		Description: "Look up a registered Hostwarden host by name, with its live status.",
 		Attributes: map[string]schema.Attribute{
 			"id":               schema.StringAttribute{Computed: true},
 			"name":             schema.StringAttribute{Required: true},
 			"address":          schema.StringAttribute{Computed: true},
 			"ssh_enabled":      schema.BoolAttribute{Computed: true},
-			"connected":        schema.BoolAttribute{Computed: true, Description: "Whether FreeCenter reaches the host. The attributes below are empty when it does not."},
+			"connected":        schema.BoolAttribute{Computed: true, Description: "Whether Hostwarden reaches the host. The attributes below are empty when it does not."},
 			"version":          schema.StringAttribute{Computed: true, Description: "ESXi version."},
 			"build":            schema.StringAttribute{Computed: true, Description: "ESXi build number."},
 			"cpu_model":        schema.StringAttribute{Computed: true, Description: "CPU model: hosts with different CPUs cannot exchange suspended VMs."},
@@ -107,7 +107,7 @@ func (d *hostDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-// ---- data source: freecenter_hosts (all) ----
+// ---- data source: hostwarden_hosts (all) ----
 
 type hostsDataSource struct{ client *Client }
 
@@ -125,12 +125,12 @@ type hostEntry struct {
 }
 
 func (d *hostsDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = "freecenter_hosts"
+	resp.TypeName = "hostwarden_hosts"
 }
 
 func (d *hostsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "All hosts registered in FreeCenter.",
+		Description: "All hosts registered in Hostwarden.",
 		Attributes: map[string]schema.Attribute{
 			"hosts": schema.ListNestedAttribute{
 				Computed: true,
@@ -169,7 +169,7 @@ func (d *hostsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, re
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-// ---- data source: freecenter_datastores ----
+// ---- data source: hostwarden_datastores ----
 
 type datastoresDataSource struct{ client *Client }
 
@@ -190,12 +190,12 @@ type datastoreEntry struct {
 }
 
 func (d *datastoresDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = "freecenter_datastores"
+	resp.TypeName = "hostwarden_datastores"
 }
 
 func (d *datastoresDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Datastores of a FreeCenter host (by host_id or host_name).",
+		Description: "Datastores of a Hostwarden host (by host_id or host_name).",
 		Attributes: map[string]schema.Attribute{
 			"host_id":   schema.StringAttribute{Optional: true, Computed: true},
 			"host_name": schema.StringAttribute{Optional: true},
@@ -248,7 +248,7 @@ func (d *datastoresDataSource) Read(ctx context.Context, req datasource.ReadRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-// ---- data source: freecenter_networks ----
+// ---- data source: hostwarden_networks ----
 
 type networksDataSource struct{ client *Client }
 
@@ -275,12 +275,12 @@ type vSwitchEntry struct {
 }
 
 func (d *networksDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = "freecenter_networks"
+	resp.TypeName = "hostwarden_networks"
 }
 
 func (d *networksDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Networking of a FreeCenter host (by host_id or host_name): the networks virtual machines can connect to, " +
+		Description: "Networking of a Hostwarden host (by host_id or host_name): the networks virtual machines can connect to, " +
 			"and the standard virtual switches and port groups behind them.",
 		Attributes: map[string]schema.Attribute{
 			"host_id":   schema.StringAttribute{Optional: true, Computed: true},
@@ -363,7 +363,7 @@ func (d *networksDataSource) Read(ctx context.Context, req datasource.ReadReques
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-// ---- data source: freecenter_vm (by host and name) ----
+// ---- data source: hostwarden_vm (by host and name) ----
 
 type vmDataSource struct{ client *Client }
 
@@ -388,7 +388,7 @@ type vmDataSourceModel struct {
 }
 
 func (d *vmDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = "freecenter_vm"
+	resp.TypeName = "hostwarden_vm"
 }
 
 func (d *vmDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -475,7 +475,7 @@ func (d *vmDataSource) Read(ctx context.Context, req datasource.ReadRequest, res
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-// ---- data source: freecenter_backups ----
+// ---- data source: hostwarden_backups ----
 
 type backupsDataSource struct{ client *Client }
 
@@ -498,7 +498,7 @@ type backupEntry struct {
 }
 
 func (d *backupsDataSource) Metadata(_ context.Context, _ datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = "freecenter_backups"
+	resp.TypeName = "hostwarden_backups"
 }
 
 func (d *backupsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
@@ -511,7 +511,7 @@ func (d *backupsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"id":         schema.StringAttribute{Computed: true, Description: "Usable as restore_from of freecenter_vm."},
+						"id":         schema.StringAttribute{Computed: true, Description: "Usable as restore_from of hostwarden_vm."},
 						"host_id":    schema.StringAttribute{Computed: true},
 						"datastore":  schema.StringAttribute{Computed: true},
 						"vm_name":    schema.StringAttribute{Computed: true},

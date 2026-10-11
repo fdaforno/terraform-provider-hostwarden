@@ -15,11 +15,11 @@ import (
 // NewProvider returns a fresh provider instance.
 func NewProvider(version string) func() provider.Provider {
 	return func() provider.Provider {
-		return &freecenterProvider{version: version}
+		return &hostwardenProvider{version: version}
 	}
 }
 
-type freecenterProvider struct {
+type hostwardenProvider struct {
 	version string
 }
 
@@ -30,31 +30,31 @@ type providerConfig struct {
 	Password types.String `tfsdk:"password"`
 }
 
-func (p *freecenterProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "freecenter"
+func (p *hostwardenProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
+	resp.TypeName = "hostwarden"
 	resp.Version = p.version
 }
 
-func (p *freecenterProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *hostwardenProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		Description: "Manage standalone ESXi hosts and their virtual machines through a FreeCenter server. " +
+		Description: "Manage standalone ESXi hosts and their virtual machines through a Hostwarden server. " +
 			"Authenticate with a token, or with a user name and password. Changes require an administrator.",
 		Attributes: map[string]schema.Attribute{
 			"address": schema.StringAttribute{
-				Description: "Base URL of the FreeCenter server (e.g. http://freecenter:8080). Env: FREECENTER_ADDRESS.",
+				Description: "Base URL of the Hostwarden server (e.g. http://hostwarden:8080). Env: HOSTWARDEN_ADDRESS.",
 				Optional:    true,
 			},
 			"token": schema.StringAttribute{
-				Description: "API bearer token, from POST /api/v1/auth/login. A token expires after 7 days without use. Env: FREECENTER_TOKEN.",
+				Description: "API bearer token, from POST /api/v1/auth/login. A token expires after 7 days without use. Env: HOSTWARDEN_TOKEN.",
 				Optional:    true,
 				Sensitive:   true,
 			},
 			"username": schema.StringAttribute{
-				Description: "User name, as an alternative to token: the provider opens the session itself. Env: FREECENTER_USERNAME.",
+				Description: "User name, as an alternative to token: the provider opens the session itself. Env: HOSTWARDEN_USERNAME.",
 				Optional:    true,
 			},
 			"password": schema.StringAttribute{
-				Description: "Password of username. Env: FREECENTER_PASSWORD.",
+				Description: "Password of username. Env: HOSTWARDEN_PASSWORD.",
 				Optional:    true,
 				Sensitive:   true,
 			},
@@ -71,28 +71,28 @@ func setting(v types.String, env string) string {
 	return os.Getenv(env)
 }
 
-func (p *freecenterProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
+func (p *hostwardenProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
 	var cfg providerConfig
 	resp.Diagnostics.Append(req.Config.Get(ctx, &cfg)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
-	address := setting(cfg.Address, "FREECENTER_ADDRESS")
-	token := setting(cfg.Token, "FREECENTER_TOKEN")
-	username := setting(cfg.Username, "FREECENTER_USERNAME")
-	password := setting(cfg.Password, "FREECENTER_PASSWORD")
+	address := setting(cfg.Address, "HOSTWARDEN_ADDRESS")
+	token := setting(cfg.Token, "HOSTWARDEN_TOKEN")
+	username := setting(cfg.Username, "HOSTWARDEN_USERNAME")
+	password := setting(cfg.Password, "HOSTWARDEN_PASSWORD")
 
 	if address == "" {
-		resp.Diagnostics.AddAttributeError(path.Root("address"), "missing FreeCenter address",
-			"Set the address attribute or the FREECENTER_ADDRESS environment variable.")
+		resp.Diagnostics.AddAttributeError(path.Root("address"), "missing Hostwarden address",
+			"Set the address attribute or the HOSTWARDEN_ADDRESS environment variable.")
 	}
 	switch {
 	case token != "":
 	case username == "" && password == "":
-		resp.Diagnostics.AddAttributeError(path.Root("token"), "missing FreeCenter credentials",
-			"Set token (FREECENTER_TOKEN), or username and password (FREECENTER_USERNAME, FREECENTER_PASSWORD).")
+		resp.Diagnostics.AddAttributeError(path.Root("token"), "missing Hostwarden credentials",
+			"Set token (HOSTWARDEN_TOKEN), or username and password (HOSTWARDEN_USERNAME, HOSTWARDEN_PASSWORD).")
 	case username == "" || password == "":
-		resp.Diagnostics.AddAttributeError(path.Root("username"), "incomplete FreeCenter credentials",
+		resp.Diagnostics.AddAttributeError(path.Root("username"), "incomplete Hostwarden credentials",
 			"Set both username and password.")
 	}
 	if resp.Diagnostics.HasError() {
@@ -104,7 +104,7 @@ func (p *freecenterProvider) Configure(ctx context.Context, req provider.Configu
 	resp.DataSourceData = client
 }
 
-func (p *freecenterProvider) Resources(_ context.Context) []func() resource.Resource {
+func (p *hostwardenProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewHostResource,
 		NewHostServiceResource,
@@ -119,7 +119,7 @@ func (p *freecenterProvider) Resources(_ context.Context) []func() resource.Reso
 	}
 }
 
-func (p *freecenterProvider) DataSources(_ context.Context) []func() datasource.DataSource {
+func (p *hostwardenProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewHostDataSource,
 		NewHostsDataSource,

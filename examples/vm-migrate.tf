@@ -4,7 +4,7 @@
 # two hosts and removed from the source. datastore names the datastore on the
 # target host.
 #
-# For a running VM FreeCenter picks the mode from the CPUs of the two hosts:
+# For a running VM Hostwarden picks the mode from the CPUs of the two hosts:
 #   - same CPU      -> suspend    (suspend, copy, resume)
 #   - different CPU -> stop_start (shut the guest down, copy, power on)
 # A suspended VM cannot resume on a different CPU: use stop_start there.
@@ -18,12 +18,12 @@ variable "app_host" {
 
 locals {
   hosts = {
-    main   = { id = data.freecenter_host.main.id, datastore = var.datastore }
-    second = { id = data.freecenter_host.second.id, datastore = "datastore1" }
+    main   = { id = data.hostwarden_host.main.id, datastore = var.datastore }
+    second = { id = data.hostwarden_host.second.id, datastore = "datastore1" }
   }
 }
 
-resource "freecenter_vm" "app" {
+resource "hostwarden_vm" "app" {
   host_id   = local.hosts[var.app_host].id
   datastore = local.hosts[var.app_host].datastore
 
@@ -36,7 +36,7 @@ resource "freecenter_vm" "app" {
   network       = "VM Network"
 
   # Migration options (all optional)
-  migrate_mode         = "stop_start" # leave it out to let FreeCenter choose
+  migrate_mode         = "stop_start" # leave it out to let Hostwarden choose
   migrate_precopy      = true         # copy the disks while the VM runs, then stop it: shorter stop
   migrate_reclaim_thin = true         # make the copied disks thin again
 

@@ -23,7 +23,7 @@ const (
 	jobPollInterval = 3 * time.Second
 )
 
-// Client is the FreeCenter REST API client.
+// Client is the Hostwarden REST API client.
 type Client struct {
 	base     string
 	username string
@@ -52,7 +52,7 @@ type apiError struct {
 	Msg  string
 }
 
-func (e *apiError) Error() string { return fmt.Sprintf("freecenter api error %d: %s", e.Code, e.Msg) }
+func (e *apiError) Error() string { return fmt.Sprintf("hostwarden api error %d: %s", e.Code, e.Msg) }
 
 // isNotFound reports whether err is the API saying the object does not exist.
 func isNotFound(err error) bool {
@@ -62,7 +62,7 @@ func isNotFound(err error) bool {
 
 type taskTargetKey struct{}
 
-// withTaskTarget names the object an operation is about: FreeCenter shows it
+// withTaskTarget names the object an operation is about: Hostwarden shows it
 // in the Target column of Recent Tasks.
 func withTaskTarget(ctx context.Context, target string) context.Context {
 	return context.WithValue(ctx, taskTargetKey{}, target)
@@ -129,7 +129,7 @@ func (c *Client) send(ctx context.Context, method, path, token string, body, out
 	if err != nil {
 		return err
 	}
-	req.Header.Set("User-Agent", "terraform-provider-freecenter/"+version)
+	req.Header.Set("User-Agent", "terraform-provider-hostwarden/"+version)
 	if token != "" {
 		req.Header.Set("Authorization", "Bearer "+token)
 	}

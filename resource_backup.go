@@ -32,7 +32,7 @@ type backupModel struct {
 }
 
 func (r *backupResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_backup"
+	resp.TypeName = "hostwarden_backup"
 }
 
 func (r *backupResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -40,16 +40,16 @@ func (r *backupResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 	keep := []planmodifier.String{stringplanmodifier.UseStateForUnknown()}
 	resp.Schema = schema.Schema{
 		Description: "A backup of a virtual machine, taken when the resource is created: a consolidated copy of its disks " +
-			"and configuration in the freecenter-backups folder of a datastore. A running VM is backed up through a " +
-			"temporary snapshot. Destroying the resource deletes the backup. For recurring backups use freecenter_schedule.",
+			"and configuration in the hostwarden-backups folder of a datastore. A running VM is backed up through a " +
+			"temporary snapshot. Destroying the resource deletes the backup. For recurring backups use hostwarden_schedule.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				Description:   "<host_id>/<datastore>/<vm_name>/<stamp>: usable as restore_from of freecenter_vm.",
+				Description:   "<host_id>/<datastore>/<vm_name>/<stamp>: usable as restore_from of hostwarden_vm.",
 				Computed:      true,
 				PlanModifiers: keep,
 			},
 			"vm_id": schema.StringAttribute{
-				Description:   "The virtual machine to back up (freecenter_vm id).",
+				Description:   "The virtual machine to back up (hostwarden_vm id).",
 				Required:      true,
 				PlanModifiers: replace,
 			},

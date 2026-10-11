@@ -1,13 +1,13 @@
 terraform {
   required_providers {
-    freecenter = { source = "fdaforno/freecenter" }
+    hostwarden = { source = "fdaforno/hostwarden" }
   }
 }
 
 # Credentials can also come from the environment:
-# FREECENTER_ADDRESS, FREECENTER_USERNAME and FREECENTER_PASSWORD, or FREECENTER_TOKEN.
-provider "freecenter" {
-  address  = "http://freecenter.example.lan:8080"
+# HOSTWARDEN_ADDRESS, HOSTWARDEN_USERNAME and HOSTWARDEN_PASSWORD, or HOSTWARDEN_TOKEN.
+provider "hostwarden" {
+  address  = "http://hostwarden.example.lan:8080"
   username = "admin"
-  password = var.freecenter_password
+  password = var.hostwarden_password
 }

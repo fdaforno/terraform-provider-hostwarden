@@ -26,7 +26,7 @@ type snapshotModel struct {
 }
 
 func (r *snapshotResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_vm_snapshot"
+	resp.TypeName = "hostwarden_vm_snapshot"
 }
 
 func (r *snapshotResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -41,7 +41,7 @@ func (r *snapshotResource) Schema(_ context.Context, _ resource.SchemaRequest, r
 				PlanModifiers: []planmodifier.String{stringplanmodifier.UseStateForUnknown()},
 			},
 			"vm_id": schema.StringAttribute{
-				Description:   "The virtual machine (freecenter_vm id).",
+				Description:   "The virtual machine (hostwarden_vm id).",
 				Required:      true,
 				PlanModifiers: replaceString,
 			},

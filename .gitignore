@@ -1,5 +1,5 @@
 # built provider
-/terraform-provider-freecenter
+/terraform-provider-hostwarden
 dist/
 
 # Terraform working files: a state file holds secrets in plain text

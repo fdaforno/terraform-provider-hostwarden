@@ -28,7 +28,7 @@ func importHostScoped(ctx context.Context, req resource.ImportStateRequest, resp
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("name"), parts[1])...)
 }
 
-// ---- freecenter_port_group ----
+// ---- hostwarden_port_group ----
 
 type portGroupResource struct{ client *Client }
 
@@ -43,7 +43,7 @@ type portGroupModel struct {
 }
 
 func (r *portGroupResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_port_group"
+	resp.TypeName = "hostwarden_port_group"
 }
 
 func (r *portGroupResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -154,7 +154,7 @@ func (r *portGroupResource) ImportState(ctx context.Context, req resource.Import
 	importHostScoped(ctx, req, resp)
 }
 
-// ---- freecenter_vswitch ----
+// ---- hostwarden_vswitch ----
 
 type vSwitchResource struct{ client *Client }
 
@@ -169,7 +169,7 @@ type vSwitchModel struct {
 }
 
 func (r *vSwitchResource) Metadata(_ context.Context, _ resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = "freecenter_vswitch"
+	resp.TypeName = "hostwarden_vswitch"
 }
 
 func (r *vSwitchResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {

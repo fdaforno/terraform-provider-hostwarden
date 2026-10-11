@@ -1,10 +1,10 @@
 # A virtual machine that boots from an ISO for a manual installation.
 # The ISO must already be on the datastore: upload it, or download it by URL,
-# from the datastore browser of FreeCenter. Then follow the installer in the
+# from the datastore browser of Hostwarden. Then follow the installer in the
 # web console of the VM.
 
-resource "freecenter_vm" "manual" {
-  host_id  = data.freecenter_host.main.id
+resource "hostwarden_vm" "manual" {
+  host_id  = data.hostwarden_host.main.id
   name     = "manual-install"
   guest_id = "rockylinux_64Guest"
 

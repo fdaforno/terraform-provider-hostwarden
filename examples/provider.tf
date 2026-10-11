@@ -2,38 +2,38 @@
 #
 # Authentication, either:
 #   - username + password: the provider opens the session itself and renews it
-#     when it expires (FREECENTER_USERNAME / FREECENTER_PASSWORD)
-#   - token: a bearer token from POST /api/v1/auth/login (FREECENTER_TOKEN);
+#     when it expires (HOSTWARDEN_USERNAME / HOSTWARDEN_PASSWORD)
+#   - token: a bearer token from POST /api/v1/auth/login (HOSTWARDEN_TOKEN);
 #     it expires after 7 days without use
 #
 # Changing anything requires a user with the admin role.
 
 terraform {
   required_providers {
-    freecenter = { source = "registry.terraform.io/fdaforno/freecenter" }
+    hostwarden = { source = "registry.terraform.io/fdaforno/hostwarden" }
   }
 }
 
-provider "freecenter" {
-  address  = var.freecenter_address
-  username = var.freecenter_username
-  password = var.freecenter_password
+provider "hostwarden" {
+  address  = var.hostwarden_address
+  username = var.hostwarden_username
+  password = var.hostwarden_password
 }
 
-variable "freecenter_address" {
-  description = "URL of the FreeCenter server."
+variable "hostwarden_address" {
+  description = "URL of the Hostwarden server."
   type        = string
   default     = "http://localhost:8080"
 }
 
-variable "freecenter_username" {
-  description = "FreeCenter user (admin role)."
+variable "hostwarden_username" {
+  description = "Hostwarden user (admin role)."
   type        = string
   default     = "admin"
 }
 
-variable "freecenter_password" {
-  description = "Password of the FreeCenter user."
+variable "hostwarden_password" {
+  description = "Password of the Hostwarden user."
   type        = string
   sensitive   = true
 }
@@ -56,21 +56,21 @@ variable "ssh_public_key" {
 }
 
 # A registered ESXi host by name, with its version, CPU and status
-data "freecenter_host" "main" {
+data "hostwarden_host" "main" {
   name = "esxi-01"
 }
 
 # A second host: target of the migration and remote backup examples
-data "freecenter_host" "second" {
+data "hostwarden_host" "second" {
   name = "esxi-02"
 }
 
 # All datastores of a host
-data "freecenter_datastores" "all" {
-  host_id = data.freecenter_host.main.id
+data "hostwarden_datastores" "all" {
+  host_id = data.hostwarden_host.main.id
 }
 
 # Networks available to virtual machines, virtual switches and port groups
-data "freecenter_networks" "main" {
-  host_id = data.freecenter_host.main.id
+data "hostwarden_networks" "main" {
+  host_id = data.hostwarden_host.main.id
 }

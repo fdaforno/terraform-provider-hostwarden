@@ -1,8 +1,8 @@
 # A virtual machine with a static address (no DHCP), set on first boot by
 # cloud-init through NetworkManager.
 
-resource "freecenter_vm" "static" {
-  host_id  = data.freecenter_host.main.id
+resource "hostwarden_vm" "static" {
+  host_id  = data.hostwarden_host.main.id
   name     = "rocky-static"
   guest_id = "rockylinux_64Guest"
 
